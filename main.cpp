@@ -2,28 +2,18 @@
 #include "Folders.h"
 #include "Enlarge.h"
 #include "Strategy.h"
+#include "Model.h"
+#include <QApplication>
 
 QTextStream cin(stdin);
 QTextStream cout(stdout);
 
-int main()
+int main(int argc, char *argv[])
 {
-    FileExplorer* ptr = new Folders();
-    Strategy* str = new Strategy(ptr);
+    QApplication a(argc, argv);
+    Model w;
+    w.show();
 
-    QString path;
-    cout << "Enter path: " << Qt::endl;
-    path = cin.readLine();
-
-    if(!path.isEmpty())
-    {
-        str->view(path);
-        delete ptr;
-        ptr = new Enlarge();
-        str->setStrategy(ptr);
-        str->view(path);
-    }
-    delete ptr;
-    delete str;
-    return 0;
+    return a.exec();
 }
+

@@ -2,7 +2,7 @@
 #define STRATEGY_H
 #include "FileExplorer.h"
 
-class Strategy
+class Strategy//стратегия, вызов абстрактного класса
 {
 public:
     explicit Strategy(FileExplorer* strategy);
@@ -12,6 +12,5 @@ public:
 private:
     FileExplorer *ptr;
 };
-
 
 #endif // STRATEGY_H

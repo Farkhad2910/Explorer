@@ -6,7 +6,10 @@ Strategy::Strategy(FileExplorer* strategy) :
 {}
 
 Strategy::~Strategy()
-{}
+{
+    if (ptr)
+        delete ptr;
+}
 
 void Strategy::view(const QString& path)
 {
@@ -16,6 +19,8 @@ void Strategy::view(const QString& path)
 
 void Strategy::setStrategy(FileExplorer* strategy)
 {
+    if (ptr)
+        delete ptr;
     ptr = strategy;
 }
 

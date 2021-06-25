@@ -45,29 +45,30 @@ QMap<QString, double> Enlarge::getPercent(qint64& size, QMap<QString, qint64>& E
     return Percents;
 }
 
-
-void Enlarge::Print(const QMap<QString, qint64>& Enlarges, const QMap<QString, double>& EnlargePercent)
-{
-    QTextStream cout(stdout);
-
-    foreach(QString path, EnlargePercent.keys())
-    {
-        double percent = EnlargePercent.value(path);
-        cout << qSetFieldWidth(30) << "." + path << qSetFieldWidth(10) << Enlarges.value(path) / 1024 << qSetFieldWidth(10) << "KB";
-        if (percent == -1)
-        {
-            cout << qSetFieldWidth(10) << "< 0.01 %" << Qt::endl;
-        }
-        else
-            cout << qSetFieldWidth(10) << QString::number(percent, 'f', 2).append(" %") << Qt::endl;
-    }
-}
-
 void Enlarge::view(const QString& path)
 {
+    QList<Data> data;
+    QList<QPair<double, QString>> Enlarge;
     QMap<QString, qint64> Enlarges;
     getEnlarge(path, Enlarges);
     auto SumSize = FileSize::getSumSize(Enlarges);
     auto percent = getPercent(SumSize, Enlarges);
-    Print(Enlarges, percent);
+    for (auto x : percent.keys())
+    {
+        Enlarge.append(QPair<double, QString>(percent[x], x));
+    }
+    for (auto x : Enlarge)
+    {
+    if (x.first == -10)
+    {
+        data.append(Data(x.second, QString::number(Enlarges.value(x.second)), QString("< 0.01 %"),(qreal)Enlarges.value(x.second)/ SumSize));
+    }
+    else
+    {
+        data.append(Data("." + x.second, QString::number(Enlarges.value(x.second)), QString::number(x.first, 'f', 2).append(" %"),(qreal)Enlarges.value(x.second)/ SumSize));
+    }
+    }
+    OnFinish(QList<Data>(data));
+
+
 }
