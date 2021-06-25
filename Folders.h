@@ -7,12 +7,11 @@ class Folders : public FileExplorer
 public:
     explicit Folders() {};
     virtual ~Folders() {};
-    void view(const QString& path);
+    void view(const QString& path);//переопределение функции view
 private:
-    qint64 getSize_(const QString& path);
+    qint64 getSize_(const QString& path);//подсчет размера текущей директории
     QMap<QString, qint64> getFolderSize(const QString& path);
     QMap<QString, double> getPercents(qint64& size, QMap<QString, qint64>& Folders) const;
-    void Print(const QMap<QString, qint64>& FolderType, const QMap<QString, double>& FolderPercent);
 };
 
 

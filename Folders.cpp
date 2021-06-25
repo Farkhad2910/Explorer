@@ -45,27 +45,26 @@ QMap<QString, double> Folders::getPercents(qint64& size, QMap<QString, qint64>& 
     return Percents;
 }
 
-void Folders::Print(const QMap<QString, qint64>& FolderType, const QMap<QString, double>& FolderPercent)
-{
-    QTextStream cout(stdout);
-
-    foreach(QString path, FolderPercent.keys())
-    {
-        double percent = FolderPercent.value(path);
-        cout << qSetFieldWidth(30) << path << qSetFieldWidth(10)  << FolderType.value(path) / 1024 << qSetFieldWidth(10) << "KB";
-        if (percent == -1)
-        {
-            cout << qSetFieldWidth(10) << "< 0.01 %" << Qt::endl;
-        }
-        else
-            cout << qSetFieldWidth(10) << QString::number(percent, 'f', 2).append(" %") << Qt::endl;
-    }
-}
-
 void Folders::view(const QString& path)
 {
+    QList<Data> data;
+    QList<QPair<double, QString>> Percents;
     auto Folders = getFolderSize(path);
     auto SumSize = FileSize::getSumSize(Folders);
     auto percent = getPercents(SumSize, Folders);
-    Print(Folders, percent);
+    for (auto x : percent.keys())
+    {
+        Percents.append(QPair<double, QString>(percent[x], x));
+    }
+    for (auto x : Percents)
+    {
+        if (x.first == -10)
+        {
+            data.append(Data(x.second, QString::number(Folders.value(x.second)), QString("< 0.01 %"), (qreal)Folders.value(x.second)/ SumSize));
+        } else
+        {
+            data.append(Data(x.second, QString::number(Folders.value(x.second)), QString::number(x.first, 'f', 2).append(" %"), (qreal)Folders.value(x.second)/ SumSize));
+        }
+    }
+    OnFinish(QList<Data>(data));
 }
